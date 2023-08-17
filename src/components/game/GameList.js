@@ -1,24 +1,63 @@
 import React, { useEffect, useState } from "react"
-import { getGames } from "../../managers/GameManager.js"
+import { getGames, deleteGame } from "../../managers/GameManager.js"
+import { useNavigate } from "react-router-dom"
 
 export const GameList = (props) => {
-    const [ games, setGames ] = useState([])
+    const [games, setGames] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         getGames().then(data => setGames(data))
     }, [])
 
+    const handleDelete = (gameId) => {
+        // Call your deleteGame function and then update the games list
+        deleteGame(gameId)
+            .then(() => {
+                // Remove the deleted game from the list
+                setGames(prevGames => prevGames.filter(game => game.id !== gameId));
+            })
+            .catch(error => {
+                console.error("Error deleting game:", error);
+            });
+    };
+
     return (
-        <article className="games">
-            {
-                games.map(game => {
-                    return <section key={`game--${game.id}`} className="game">
-                        <div className="game__title">{game.game_title} by {game.creator.full_name}</div>
-                        <div className="game__players">{game.number_of_players} players needed</div>
-                        <div className="game__skillLevel">Skill level is {game.skill_level}</div>
-                    </section>
-                })
-            }
-        </article>
-    )
+        <div>
+            <button className="btn btn-2 btn-sep icon-create"
+                onClick={() => {
+                    navigate({ pathname: "/games/new" });
+                }}
+            >
+                Register New Game
+            </button>
+            <article className="games">
+                {
+                    games.map(game => {
+                        return (
+                            <section key={`game--${game.id}`} className="game">
+                                <div className="game__title">{game.game_title} by {game.creator}</div>
+                                <div className="game__players">{game.number_of_players} players needed</div>
+                                <div className="game__skillLevel">Skill level is {game.skill_level}</div>
+                                <button
+                                    className="btn btn-2 btn-sep icon-create"
+                                    onClick={() => {
+                                        navigate(`/games/${game.id}`);
+                                    }}
+                                >
+                                    Update
+                                </button>
+                                <button
+                                    className="btn btn-2 btn-sep icon-create"
+                                    onClick={() => handleDelete(game.id)}
+                                >
+                                    Delete
+                                </button>
+                            </section>
+                        );
+                    })
+                }
+            </article>
+        </div>
+    );
 }
