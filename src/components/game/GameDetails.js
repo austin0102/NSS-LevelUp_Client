@@ -1,34 +1,31 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { getGameById } from "../../managers/GameManager.js";
-import { useNavigate } from "react-router-dom";
 
-export const GameDetails = (props) => {
-    const [game, setGame] = useState([]);
-    const navigate = useNavigate();
+export const GameDetails = () => {
+    const { id } = useParams(); // Get the game ID from the URL parameters
+    const [gameDetails, setGameDetails] = useState(null);
 
     useEffect(() => {
-        getGameById(props.id) // Use props.id here
-            .then(data => setGame(data))
-            .catch(error => {
-                console.error('Error fetching game details:', error);
-            });
-    }, [props.id]); // Add props.id to the dependency array
+        // Fetch game details based on the ID from the URL
+        getGameById(id)
+            .then(data => setGameDetails(data))
+            .catch(error => console.error("Error fetching game details:", error));
+    }, [id]);
+
+    if (!gameDetails) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div>
-            <article className="games">
-                {
-                    game.map(gameItem => {
-                        return (
-                            <section key={`game--${gameItem.id}`} className="game">
-                                <div className="game__title">{gameItem.game_title} by {gameItem.creator}</div>
-                                <div className="game__players">{gameItem.number_of_players} players needed</div>
-                                <div className="game__skillLevel">Skill level is {gameItem.skill_level}</div>
-                            </section>
-                        );
-                    })
-                }
-            </article>
+        <div className="game-details">
+            <h2>{gameDetails.game_title}</h2>
+            <p>Creator: {gameDetails.creator}</p>
+            <p>Number of Players: {gameDetails.number_of_players}</p>
+            <p>Skill Level: {gameDetails.skill_level}</p>
+            {/* Add other game details here */}
         </div>
     );
 };
+
+

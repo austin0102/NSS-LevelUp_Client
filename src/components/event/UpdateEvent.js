@@ -103,7 +103,13 @@ export const UpdateEvent = () => {
 
                     // Send POST request to your API
                     updateEvent(event, id)
-                        .then(() => navigate("/events"));
+                    .then(() => {
+                        // Navigate to the EventsDetails route with the updated game ID
+                        navigate(`/events/details/${id}`);
+                    })
+                    .catch(error => {
+                        console.error("Error updating game:", error);
+                    });
                 }}
                 className="btn btn-primary">Update Event</button>
         </form>

@@ -20,10 +20,17 @@ export const GameForm = () => {
         // TODO: Get the game types, then set the state
         getGameTypes().then(data => setGameTypes(data));
     }, []);
+    
 
+    //handle changes in the form inputs. It receives the DOM event from the input elements
     const changeGameState = (domEvent) => {
+        //Create shallow copy og the currentGame State
         const newGameState = { ...currentGame };
+        //This line updates the property in newGameState that corresponds to the name of 
+        //the input element that triggered the change event (domEvent.target.name). 
+        //It sets the value to the new value of the input (domEvent.target.value)
         newGameState[domEvent.target.name] = domEvent.target.value;
+        //updates the state 
         setCurrentGame(newGameState);
     }
 

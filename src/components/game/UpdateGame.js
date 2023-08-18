@@ -7,6 +7,9 @@ export const UpdateGame = () => {
     const [gameTypes, setGameTypes] = useState([]);
     const { id } = useParams();
 
+    //currentGame is a state variable that holds the current game's data that is being edited in the form.
+    //The initial state is set to empty strings and 0 for some fields.
+
     const [currentGame, setCurrentGame] = useState({
         skillLevel: "",
         numberOfPlayers: 0,
@@ -14,6 +17,12 @@ export const UpdateGame = () => {
         creator: "",
         gameTypeId: 0
     });
+
+// This useEffect hook is responsible for fetching 
+// the game types and the details of the game with the specified id.
+// getGameTypes() fetches the available game types and sets the gameTypes state.
+// getGameById(id) fetches the details of the game with the 
+// given id and populates the currentGame state with those details.
 
     useEffect(() => {
         // Get the game types and set the state
@@ -32,6 +41,9 @@ export const UpdateGame = () => {
             });
     }, [id]);
     
+
+    // This function, changeGameState, is used to update the currentGame 
+    // state when the user interacts with the form inputs.
 
     const changeGameState = (domEvent) => {
         const newGameState = { ...currentGame };
@@ -111,7 +123,13 @@ export const UpdateGame = () => {
     
                     // Send POST request to your API
                     updateGame(game, id)
-                        .then(() => navigate("/games"));
+                    .then(() => {
+                        // Navigate to the GameDetails route with the updated game ID
+                        navigate(`/games/details/${id}`);
+                    })
+                    .catch(error => {
+                        console.error("Error updating game:", error);
+                    });
                 }}
                 className="btn btn-primary">Update</button>
         </form>

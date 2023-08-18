@@ -28,6 +28,9 @@ export const getGameTypes = () => {
         .then(response => response.json())
 }
 
+
+//game: This is an object containing the updated data for the game. It should 
+//have the same structure as your game object with the new values.
 export const updateGame = (game, id) => {
     return fetch(`http://localhost:8000/games/${id}`, {
         method: "PUT",

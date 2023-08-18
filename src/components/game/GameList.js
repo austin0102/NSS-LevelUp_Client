@@ -3,12 +3,17 @@ import { getGames, deleteGame } from "../../managers/GameManager.js"
 import { useNavigate } from "react-router-dom"
 
 export const GameList = (props) => {
+    //Initialize a state variable games to hold the list of games.
     const [games, setGames] = useState([])
     const navigate = useNavigate()
-
+    
+    //Use the useEffect hook with an empty dependency array to 
+    //fetch the list of games when the component mounts.
     useEffect(() => {
+        //fetch list of games and update game state
         getGames().then(data => setGames(data))
     }, [])
+    
 
     const handleDelete = (gameId) => {
         // Call your deleteGame function and then update the games list
